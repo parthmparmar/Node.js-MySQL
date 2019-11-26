@@ -27,4 +27,4 @@ VALUES
     ("Kit Kat", 3, 1.00, 10),
     ("banana", 3, 0.25, 10);
 
-SELECT * FROM products
+SELECT * FROM products WHERE stock_qty < 9;

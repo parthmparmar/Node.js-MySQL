@@ -2,9 +2,6 @@ var mysql = require("mysql");
 var inquirer = require("inquirer");
 var Table = require("cli-table");
 
-// var table = new Table({
-//     head: ["item_id", "item name", "department", "price", "stock"]
-// });
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -13,6 +10,8 @@ var connection = mysql.createConnection({
     password: "Parth123",
     database: "bamazon"
 });
+
+var itemIdArray = [];
 
 connection.connect(function(err){
     if (err) throw err;
@@ -23,6 +22,7 @@ function startUP(){
     var table = new Table({
         head: ["item_id", "item name", "department", "price", "stock"]
     });
+    itemIdArray = [];
     connection.query(
         "SELECT * FROM products", function(err, resp){
             if(err) throw err;
@@ -42,7 +42,8 @@ function userInput(){
             name: "action"
         },
         {
-            type: "number",
+            type: "rawlist",
+            choices: itemIdArray,
             message: "Which Item would you like to buy (use item_id)?",
             name: "selected_id",
             when: function(response){
@@ -102,6 +103,7 @@ function createTable(object, table){
         object.forEach(element => {
             var tableRow = [element.item_id, element.product_name, element.department_name, element.price, element.stock_qty];
             table.push(tableRow)
+            itemIdArray.push(element.item_id);
         });
         console.log(table.toString());
 };
