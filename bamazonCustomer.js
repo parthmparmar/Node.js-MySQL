@@ -1,5 +1,10 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
+var Table = require("cli-table");
+
+// var table = new Table({
+//     head: ["item_id", "item name", "department", "price", "stock"]
+// });
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -15,11 +20,13 @@ connection.connect(function(err){
 });
 
 function startUP(){
+    var table = new Table({
+        head: ["item_id", "item name", "department", "price", "stock"]
+    });
     connection.query(
         "SELECT * FROM products", function(err, resp){
             if(err) throw err;
-            // console.log(resp)
-            console.table(resp);
+            createTable(resp, table);
             userInput();
         }
     );
@@ -76,7 +83,7 @@ function transactionBuy(id, qty){
             var total_cost = price * qty;
             var new_stock_qty = item_qty - qty;
             console.log("Thank you for purchasing " + qty + " of " + item_name + ".")
-            console.log("You will pay: $" + total_cost);
+            console.log("The total cost for your purchase today is: $" + total_cost);
             removeStock(id, new_stock_qty);
         }
     );
@@ -89,4 +96,12 @@ function removeStock(id, new_stock_qty){
             startUP();
         }
     );
+};
+
+function createTable(object, table){
+        object.forEach(element => {
+            var tableRow = [element.item_id, element.product_name, element.department_name, element.price, element.stock_qty];
+            table.push(tableRow)
+        });
+        console.log(table.toString());
 };
