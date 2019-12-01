@@ -9,6 +9,9 @@ var connection = mysql.createConnection({
     password: "Parth123",
     database: "bamazon"
 });
+
+var itemIdArray = [];
+
 connection.connect(function(err){
     if (err) throw err;
     startUp();
@@ -35,6 +38,9 @@ function runTransaction(action){
             break;
         case "View Low Inventory":
             showLow();
+            break;
+        case "Add to Inventory":
+            addStock();
             break;
     };
 };
@@ -69,11 +75,12 @@ function showLow(){
 };
 
 function addStock(){
+    showAll();
     inquirer
     .prompt ([
         {
             type:"rawlist",
-            choices: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            choices: itemIdArray,
             message: "Select item to add stock to",
             name: "addStockId"
         },
@@ -83,16 +90,37 @@ function addStock(){
             name: "stockAdd"
         }
     ]).then(function(answer){
-        addStockId = answer.addStockId;
-        addStockNum = answer.stockAdd;
+        var addStockId = answer.addStockId;
+        var addStockNum = answer.stockAdd;
+        var currentStock = 0;
+        var newStock = 0;
+        var item_name = "";
 
-    })
-}
+        connection.query(
+            "SELECT * FROM products WHERE item_id = ?", [addStockId], function(err, resp){
+                if (err) throw err;
+                currentStock = resp[0].stock_qty;
+                item_name = resp[0].product_name;
+                newStock = currentStock + addStockNum;
+                connection.query(
+                    "UPDATE products SET stock_qty = ? WHERE item_id = ?", [newStock, addStockId], function(err, resp){
+                        if (err) throw err;
+                        if (resp.changedRows == 1){
+                            console.log(item_name + " has a new stock of " + newStock);
+                        };
+                        connection.end();
+                    }
+                );
+            }
+        )
+    });
+};
 
 function createTable(object, table){
     object.forEach(element => {
         var tableRow = [element.item_id, element.product_name, element.department_name, element.price, element.stock_qty];
         table.push(tableRow)
+        itemIdArray.push(element.item_id);
     });
     console.log(table.toString());
 };
