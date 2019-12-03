@@ -1,0 +1,25 @@
+{
+  "name": "node.js-mysql",
+  "version": "1.0.0",
+  "description": "bamazon shopping",
+  "main": "bamazonCustomer.js",
+  "dependencies": {
+    "cli-table": "^0.3.1",
+    "inquirer": "^7.0.0",
+    "mysql": "^2.17.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/parthmparmar/Node.js-MySQL.git"
+  },
+  "author": "Parth Parmar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/parthmparmar/Node.js-MySQL/issues"
+  },
+  "homepage": "https://github.com/parthmparmar/Node.js-MySQL#readme"
+}

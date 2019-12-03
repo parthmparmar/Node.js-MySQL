@@ -27,4 +27,20 @@ VALUES
     ("Kit Kat", 3, 1.00, 10),
     ("banana", 3, 0.25, 10);
 
-SELECT * FROM products WHERE stock_qty < 9;
+
+USE bamazon;
+
+CREATE TABLE departments (
+item_id INT NOT NULL AUTO_INCREMENT,
+department CHAR(30),
+PRIMARY KEY (item_id)
+);
+
+INSERT INTO departments (department)
+VALUES 
+	("Electronics"),
+    ("House Hold"),
+    ("Food"),
+    ("Clothing"),
+    ("Furniture"),
+    ("Media");

@@ -24,8 +24,9 @@ function startUP(){
     });
     itemIdArray = [];
     connection.query(
-        "SELECT * FROM products", function(err, resp){
+        "SELECT products.item_id, products.product_name, products.price, products.stock_qty, departments.department FROM products INNER JOIN departments ON products.department_name = departments.item_id", function(err, resp){
             if(err) throw err;
+            // console.log(resp)
             createTable(resp, table);
             userInput();
         }
@@ -47,7 +48,6 @@ function userInput(){
             message: "Which Item would you like to buy (use item_id)?",
             name: "selected_id",
             when: function(response){
-                console.log(response.action);
                 return response.action == "Buy";
             }
         },
@@ -61,7 +61,7 @@ function userInput(){
         },
     ]).then(function(resp){
         if (resp.action == "Exit"){
-        console.log("Thank you for shopping, please come again!");
+        console.log("\nThank you for shopping, please come again!");
         connection.end();
         }
         else {
@@ -76,15 +76,15 @@ function transactionBuy(id, qty){
             if (err) throw err;
             var item_qty = resp[0].stock_qty;
             if (item_qty < qty){
-                console.log("Sorry, we only have " + item_qty + "in stock, please try again with a different qty");
+                console.log("\nSorry, we only have " + item_qty + " in stock, please try again with a different qty");
                 return userInput();
             };
             var item_name = resp[0].product_name;
             var price = resp[0].price;
             var total_cost = price * qty;
             var new_stock_qty = item_qty - qty;
-            console.log("Thank you for purchasing " + qty + " of " + item_name + ".")
-            console.log("The total cost for your purchase today is: $" + total_cost);
+            console.log("\nThank you for purchasing " + qty + " of " + item_name + ".")
+            console.log("The total cost for your purchase today is: $" + total_cost +"\n");
             removeStock(id, new_stock_qty);
         }
     );
@@ -101,7 +101,7 @@ function removeStock(id, new_stock_qty){
 
 function createTable(object, table){
         object.forEach(element => {
-            var tableRow = [element.item_id, element.product_name, element.department_name, element.price, element.stock_qty];
+            var tableRow = [element.item_id, element.product_name, element.department, element.price, element.stock_qty];
             table.push(tableRow)
             itemIdArray.push(element.item_id);
         });
