@@ -26,7 +26,6 @@ function startUP(){
     connection.query(
         "SELECT products.item_id, products.product_name, products.price, products.stock_qty, departments.department FROM products INNER JOIN departments ON products.department_name = departments.item_id", function(err, resp){
             if(err) throw err;
-            // console.log(resp)
             createTable(resp, table);
             userInput();
         }
