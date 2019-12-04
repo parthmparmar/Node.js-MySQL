@@ -44,3 +44,6 @@ VALUES
     ("Clothing"),
     ("Furniture"),
     ("Media");
+
+USE bamazon;
+SELECT * FROM products

@@ -163,11 +163,13 @@ function addNewProduct(){
         connection.query(
             "INSERT INTO products (product_name, department_name, price, stock_qty) VALUES (?, ? , ?, ?)", [resp.productName, resp.departmentID, resp.productPrice, resp.startQty], function(err, resp){
                 if (err) throw err;
-                console.log(resp);
+                if(resp.affectedRows == 1){
+                    console.log("\n The new was added to the store.\n")
+                };
                 startUp();
             }
         );
-        
+
 
     })
 }
